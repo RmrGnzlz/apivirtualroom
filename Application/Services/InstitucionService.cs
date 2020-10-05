@@ -48,11 +48,11 @@ namespace Application.Services
             institucion.Municipio = municipio;
             // institucion.Rector = rector;
             institucion.Sedes = new List<Sede>();
-            // foreach (var item in request.Sedes)
-            // {
+            foreach (var item in request.Sedes)
+            {
                 
-            //     institucion.Sedes.Add(item.ToEntity().ReverseMap());
-            // }
+                institucion.Sedes.Add(item.ToEntity().ReverseMap());
+            }
 
             _repository.Add(institucion);
             _unitOfWork.Commit();

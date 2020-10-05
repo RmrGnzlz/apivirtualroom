@@ -36,6 +36,7 @@ namespace WebApi.Controllers
         public ActionResult<InstitucionResponse> Post(InstitucionRequest request)
         {
             var response = _service.Add(request);
+            if (response.Estado == false) return BadRequest(response);
             return Ok(response);
         }
 

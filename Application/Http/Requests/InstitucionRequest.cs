@@ -13,6 +13,7 @@ namespace Application.HttpModel
         public string Nombre { get; set; }
         public string CodigoMunicipio { get; set; }
         public string PaginaWeb { get; set; }
+        public List<SedeRequest> Sedes { get; set; }
         public override InstitucionModel ToEntity()
         {
             var institucion = new InstitucionModel
