@@ -95,6 +95,13 @@ namespace WebApi
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(options => options
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyMethod()
+            );
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -113,12 +120,6 @@ namespace WebApi
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api Rest - Solumatica");
                 c.RoutePrefix = string.Empty;
             });
-
-            app.UseCors(options => options.AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowAnyMethod()
-            );
         }
     }
 }
