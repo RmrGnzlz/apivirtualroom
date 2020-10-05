@@ -117,6 +117,7 @@ namespace WebApi
             app.UseCors(options => options.AllowAnyOrigin()
                 .AllowAnyHeader()
                 .AllowAnyMethod()
+                .AllowAnyMethod()
             );
         }
     }
