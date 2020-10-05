@@ -19,7 +19,10 @@ namespace Application.Models
         }
         public override Municipio ReverseMap()
         {
-            return new Municipio();
+            return new Municipio {
+                Codigo = Codigo,
+                Nombre = Nombre,
+            };
         }
         public MunicipioModel Include(Departamento departamento)
         {

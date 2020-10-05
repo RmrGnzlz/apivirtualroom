@@ -57,7 +57,6 @@ namespace Application.Services
             _repository.Add(institucion);
             _unitOfWork.Commit();
 
-            // institucion.Sedes.ForEach(x => x.Institucion = null);
             institucion.Municipio.Instituciones = null;
             
             return new InstitucionResponse(

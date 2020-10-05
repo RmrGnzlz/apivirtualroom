@@ -31,6 +31,7 @@ namespace Application.Models
                 NIT = Nit,
                 DANE = Dane,
                 Nombre = Nombre,
+                PaginaWeb = PaginaWeb,
                 Rector = Directivo != null ? Directivo.ReverseMap() : null,
             };
         }

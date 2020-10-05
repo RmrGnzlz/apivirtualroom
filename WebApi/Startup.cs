@@ -70,6 +70,10 @@ namespace WebApi
                     Version = "v1"
                 });
             });
+
+            services.AddCors(options => {
+                options.AddPolicy("AllowAllOrigins", builder => builder.AllowAnyOrigin());
+            });
         }
 
         private string HerokuStringPostgres(string connectionString)

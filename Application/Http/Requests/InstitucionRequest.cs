@@ -12,6 +12,7 @@ namespace Application.HttpModel
         public string DANE { get; set; }
         public string Nombre { get; set; }
         public string CodigoMunicipio { get; set; }
+        public string PaginaWeb { get; set; }
         public override InstitucionModel ToEntity()
         {
             var institucion = new InstitucionModel
@@ -19,6 +20,7 @@ namespace Application.HttpModel
                 Nit = NIT,
                 Dane = DANE,
                 Nombre = Nombre,
+                PaginaWeb = PaginaWeb
             };
             return institucion;
         }
