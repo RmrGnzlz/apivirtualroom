@@ -36,7 +36,7 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            // services.AddCors();
             services.AddControllers();
             services.AddControllers().AddJsonOptions(opt => opt.JsonSerializerOptions.IgnoreNullValues = true);
             //"Host=ec2-52-0-155-79.compute-1.amazonaws.com;Port=5432;Database=darscg1heeg51g;Username=mgkshjrkovllrc;Password=2ee5ea5cf4c5c50565a2f1815cd591f109cce67f15c15c0def594b79d424b501;SSL=true;SslMode=Require"
@@ -114,11 +114,10 @@ namespace WebApi
                 c.RoutePrefix = string.Empty;
             });
 
-            app.UseCors(x => x
-                .AllowAnyMethod()
+            app.UseCors(options => options.AllowAnyOrigin()
                 .AllowAnyHeader()
-                .SetIsOriginAllowed(origin => true) // allow any origin
-                .AllowCredentials()); // allow credentials
+                .AllowAnyMethod()
+            );
         }
     }
 }
