@@ -9,6 +9,7 @@ namespace Application.HttpModel
     public class DirectivoRequest : IRequest<DirectivoModel>
     {
         public string Institucion { get; set; }
+        public string Sede { get; set; }
         public string Apellidos { get; set; }
         public string Nombres { get; set; }
         public string NumeroCedula { get; set; }

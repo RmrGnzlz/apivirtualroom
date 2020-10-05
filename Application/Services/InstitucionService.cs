@@ -28,40 +28,41 @@ namespace Application.Services
                 );
             }
 
-            Directivo rector = _unitOfWork.DirectivoRepository.FindFirstOrDefault(x => x.Persona.Documento.NumeroDocumento == request.Rector.NumeroCedula, trackable: true);
-            if (rector == null)
-            {
-                DirectivoService directivoService = new DirectivoService(_unitOfWork);
-                DirectivoResponse directivoResponse = directivoService.AddRector(request.Rector);
-                if (directivoResponse.Estado == false || !directivoResponse.Data.Any())
-                {
-                    return new VoidResponse(
-                        mensaje: directivoResponse.Mensaje,
-                        estado: false
-                    );
-                }
+            // Directivo rector = _unitOfWork.DirectivoRepository.FindFirstOrDefault(x => x.Persona.Documento.NumeroDocumento == request.Rector.NumeroCedula, trackable: true);
+            // if (rector == null)
+            // {
+            //     DirectivoService directivoService = new DirectivoService(_unitOfWork);
+            //     DirectivoResponse directivoResponse = directivoService.AddRector(request.Rector);
+            //     if (directivoResponse.Estado == false || !directivoResponse.Data.Any())
+            //     {
+            //         return new VoidResponse(
+            //             mensaje: directivoResponse.Mensaje,
+            //             estado: false
+            //         );
+            //     }
 
-                rector = directivoResponse.Data.FirstOrDefault().ReverseMap();
-            }
+            //     rector = directivoResponse.Data.FirstOrDefault().ReverseMap();
+            // }
 
-            Institucion response = request.ToEntity().ReverseMap();
-            response.Municipio = municipio;
-            response.Rector = rector;
-            response.Sedes = new List<Sede>();
-            foreach (var item in request.Sedes)
-            {
-                response.Sedes.Add(item.ToEntity().ReverseMap());
-            }
+            Institucion institucion = request.ToEntity().ReverseMap();
+            institucion.Municipio = municipio;
+            // institucion.Rector = rector;
+            institucion.Sedes = new List<Sede>();
+            // foreach (var item in request.Sedes)
+            // {
+                
+            //     institucion.Sedes.Add(item.ToEntity().ReverseMap());
+            // }
 
-            _repository.Add(response);
+            _repository.Add(institucion);
             _unitOfWork.Commit();
 
-            response.Sedes.ForEach(x => x.Institucion = null);
-            response.Municipio.Instituciones = null;
+            // institucion.Sedes.ForEach(x => x.Institucion = null);
+            institucion.Municipio.Instituciones = null;
             
             return new InstitucionResponse(
-                mensaje: $"Institucion {response.Nombre} agregada con  éxito",
-                entidad: new InstitucionModel(response).Include(response.Rector),
+                mensaje: $"Institucion {institucion.Nombre} agregada con  éxito",
+                entidad: new InstitucionModel(institucion).Include(institucion.Municipio),
                 estado: true
             );
         }

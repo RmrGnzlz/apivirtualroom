@@ -12,8 +12,6 @@ namespace Application.HttpModel
         public string DANE { get; set; }
         public string Nombre { get; set; }
         public string CodigoMunicipio { get; set; }
-        public DirectivoRequest Rector { get; set; }
-        public List<SedeRequest> Sedes { get; set;}
         public override InstitucionModel ToEntity()
         {
             var institucion = new InstitucionModel
@@ -22,11 +20,6 @@ namespace Application.HttpModel
                 Dane = DANE,
                 Nombre = Nombre,
             };
-            if (Sedes != null)
-            {
-                institucion.Sedes = new List<SedeModel>();
-                Sedes.ForEach(x => institucion.Sedes.Add(x.ToEntity()));
-            }
             return institucion;
         }
     }

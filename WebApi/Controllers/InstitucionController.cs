@@ -32,7 +32,7 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
-        [HttpPost, Authorize(Roles = "Admin")]
+        [HttpPost, Authorize]
         public ActionResult<InstitucionResponse> Post(InstitucionRequest request)
         {
             var response = _service.Add(request);

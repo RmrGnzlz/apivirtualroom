@@ -12,6 +12,7 @@ namespace Application.HttpModel
         public string Nombre { get; set; }
         public string Direcion { get; set; }
         public string Telefono { get; set; }
+        public List<DirectivoRequest> Directivos { get; set; }
         public override SedeModel ToEntity()
         {
             return new SedeModel
