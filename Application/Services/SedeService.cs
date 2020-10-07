@@ -1,3 +1,4 @@
+using System.Linq;
 using Application.Base;
 using Application.HttpModel;
 using Application.Models;
@@ -14,8 +15,19 @@ namespace Application.Services
 
         public BaseResponse Add(SedeRequest request)
         {
+            Institucion institucion = _unitOfWork.InstitucionRepository.FindFirstOrDefault(x => x.NIT == request.NIT);
+            if (institucion == null)
+            {
+                return new SedeResponse(
+                    mensaje: $"Institución con NIT: {request.NIT} no encontrada",
+                    entidad: request.ToEntity(),
+                    estado: false
+                );
+            }
+
             Sede sede = request.ToEntity().ReverseMap();
-            sede.Id = 0;
+            institucion.Sedes.Add(sede);
+
             _repository.Add(sede);
             _unitOfWork.Commit();
             return new Response<SedeModel>(
@@ -23,6 +35,13 @@ namespace Application.Services
                 entidad: new Models.SedeModel(sede),
                 estado: true
             );
+        }
+
+        public BaseResponse Search(string busqueda)
+        {
+            busqueda = busqueda.ToUpper();
+            var entities = _repository.FindBy(x => x.Nombre.ToUpper().Contains(busqueda) || x.Telefono.ToUpper().Contains(busqueda) || x.Direccion.ToUpper().Contains(busqueda), false).ToList();
+            return new SedeResponse($"Instituciones que coinciden con: {busqueda}", SedeModel.ListToModels(entities), true);
         }
     }
 }

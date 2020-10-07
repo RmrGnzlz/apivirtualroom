@@ -8,7 +8,7 @@ namespace Application.HttpModel
 {
     public class SedeRequest : Request<SedeModel>
     {
-        public int Institucion { get; set; }
+        public string NIT { get; set; }
         public string Nombre { get; set; }
         public string Direcion { get; set; }
         public string Telefono { get; set; }
@@ -19,8 +19,7 @@ namespace Application.HttpModel
             {
                 Nombre = Nombre,
                 Direccion = Direcion,
-                Telefono = Telefono,
-                Institucion = new InstitucionModel { Key = Institucion }
+                Telefono = Telefono
             };
         }
     }

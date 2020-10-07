@@ -57,11 +57,9 @@ namespace Application.Services
             _repository.Add(institucion);
             _unitOfWork.Commit();
 
-            institucion.Municipio.Instituciones = null;
-            
             return new InstitucionResponse(
                 mensaje: $"Institucion {institucion.Nombre} agregada con  éxito",
-                entidad: new InstitucionModel(institucion).Include(institucion.Municipio),
+                entidad: new InstitucionModel(institucion).Include(institucion.Municipio).Include(institucion.Sedes),
                 estado: true
             );
         }
