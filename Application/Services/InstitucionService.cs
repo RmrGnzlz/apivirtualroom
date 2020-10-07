@@ -50,7 +50,6 @@ namespace Application.Services
             institucion.Sedes = new List<Sede>();
             foreach (var item in request.Sedes)
             {
-                
                 institucion.Sedes.Add(item.ToEntity().ReverseMap());
             }
 

@@ -24,7 +24,12 @@ namespace Application.Models
         }
         public override Sede ReverseMap()
         {
-            return new Sede();
+            return new Sede
+            {
+                Nombre = Nombre,
+                Direccion = Direccion,
+                Telefono = Telefono
+            };
         }
         public SedeModel Include(List<Directivo> directivos)
         {
