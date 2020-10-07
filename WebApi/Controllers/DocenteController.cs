@@ -29,10 +29,15 @@ namespace WebApi.Controllers
             _usuarioService = new UsuarioService(_unitOfWork);
         }
 
-        [HttpPost, AllowAnonymous]
-        public ActionResult<BaseResponse> Post(DocenteRequest request)
+        [HttpPost]
+        public ActionResult<BaseResponse> Post(RegistroDocentesRequest request)
         {
-            return Ok(_service.Post(request));
+            var response = _service.PostRange(request.Docentes, request.NIT);
+            if (response.Estado == false)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
         }
 
         [HttpGet("MisAsignaturas"), Authorize(Roles = "Docente")]

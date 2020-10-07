@@ -44,18 +44,44 @@ namespace Application.Services
         {
             return new Response<DocenteModel>("Lista de docentes", DocenteModel.ListToModels(_repository.FindBy(x => x.Persona.Institucion.Id == BaseModel.GetId(institucionKey), includeProperties: "Persona", trackable: false).ToList()), true);
         }
-        public BaseResponse Post(DocenteRequest request)
+        public BaseResponse PostRange(List<DocenteRequest> request, string NIT)
         {
-            int institucionId = BaseModel.GetId(request.InstitucionKey);
-            Docente docente = request.ToEntity().ReverseMap();
-            Institucion institucion = _unitOfWork.InstitucionRepository.FindBy(x => x.Id == institucionId, true).FirstOrDefault();
-            if (institucion == null) return new VoidResponse($"La institución {request.InstitucionKey} no se encontró", false);
+            Institucion institucion = _unitOfWork.InstitucionRepository.FindFirstOrDefault(x => x.NIT == NIT);
+            if (institucion == null) return new VoidResponse($"La institución con NIT: {NIT} no se encontró", false);
 
-            request.Asignaturas.ForEach(item =>
+            List<Docente> entities = new List<Docente>(request.Count);
+            foreach (var docente in request)
             {
-                // _unitOfWork.AsignaturaRepository.FindBy(x => x.Nombre == item.Asignatura)
-            });
-            return null;
+                if (_repository.Count(x => x.Persona.Documento.NumeroDocumento == docente.NumeroCedula && x.Persona.Institucion.NIT == NIT) > 0)
+                {
+                    return new VoidResponse(
+                        mensaje: $"El docente con cédula {docente.NumeroCedula} ya existe para la institucion con NIT: {NIT}",
+                        estado: false
+                    );
+                }
+                else
+                {
+                    Docente entity = docente.ToEntity().ReverseMap();
+                    entity.Persona.Institucion = institucion;
+                    entity.Persona.Usuario = new UsuarioService(_unitOfWork).GenerateUser(
+                        username: entity.Persona.Documento.NumeroDocumento,
+                        password: "solumaticasgrm",
+                        email: docente.Email,
+                        tipo: TipoUsuario.Docente,
+                        rol: _unitOfWork.RolRepository.FindFirstOrDefault(x => x.Nombre == TipoUsuario.Docente.ToString())
+                    );
+                    entities.Add(entity);
+                }
+            }
+
+            _repository.AddRange(entities);
+            _unitOfWork.Commit();
+
+            return new Response<DocenteModel>(
+                mensaje: $"{entities.Count} docentes agregados a la institución con NIT: {NIT}",
+                data: DocenteModel.ListToModels(entities),
+                estado: true
+            );
         }
         public DocenteModel GetById(int key)
         {

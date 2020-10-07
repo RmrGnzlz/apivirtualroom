@@ -8,12 +8,12 @@ namespace Application.HttpModel
 {
     public class DirectivoRequest : IRequest<DirectivoModel>
     {
-        public string Institucion { get; set; }
         public string Sede { get; set; }
         public string Apellidos { get; set; }
         public string Nombres { get; set; }
         public string NumeroCedula { get; set; }
         public string Cargo { get; set; }
+        public string Email { get; set; }
         public DirectivoModel ToEntity()
         {
             return new DirectivoModel
@@ -31,5 +31,10 @@ namespace Application.HttpModel
                 }
             };
         }
+    }
+    public class RegistrarDirectivosRequest : BaseRequest
+    {
+        public string NIT { get; set; }
+        public List<DirectivoRequest> Directivos { get; set; }
     }
 }

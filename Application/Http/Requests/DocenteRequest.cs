@@ -8,11 +8,10 @@ namespace Application.HttpModel
 {
     public class DocenteRequest : Request<DocenteModel>
     {
-        public int InstitucionKey { get; set; }
         public string Apellidos { get; set; }
         public string Nombres { get; set; }
         public string NumeroCedula { get; set; }
-        public List<DocenteAsignaturaRequest> Asignaturas { get; set; }
+        public string Email { get; set; }
         public override DocenteModel ToEntity()
         {
             return new DocenteModel
@@ -29,6 +28,11 @@ namespace Application.HttpModel
                 }
             };
         }
+    }
+    public class RegistroDocentesRequest : BaseRequest
+    {
+        public string NIT { get; set; }
+        public List<DocenteRequest> Docentes { get; set; }
     }
     public class DocenteAsignaturaRequest
     {

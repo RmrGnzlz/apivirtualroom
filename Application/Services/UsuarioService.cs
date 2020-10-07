@@ -42,6 +42,17 @@ namespace Application.Services
 
             return new UsuarioResponse($"Usuario {request.Username} registrado correctamente", new UsuarioModel(entity).Include(entity.Rol), true);
         }
+        public Usuario GenerateUser(string username, string password, string email, TipoUsuario tipo, Rol rol)
+        {
+            Usuario usuario = new Usuario {
+                Username = username,
+                Email = email,
+                Tipo = tipo,
+                Rol = rol
+            };
+            usuario.Password = new PasswordHasher<Usuario>().HashPassword(usuario, password);
+            return usuario;
+        }
         public UsuarioResponse Auth(LoginRequest request)
         {
             Usuario usuario = _repository.FindBy(x => x.Username == request.Username, includeProperties: "Rol").FirstOrDefault();
