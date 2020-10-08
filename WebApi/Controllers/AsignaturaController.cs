@@ -24,6 +24,13 @@ namespace WebApi.Controllers
             _usuarioService = new UsuarioService(_unitOfWork);
         }
 
+        [HttpPost]
+        public ActionResult<BaseResponse> Post(RegistroAsignaturasRequest request)
+        {
+            BaseResponse response = new Response<RegistroAsignaturasRequest>(mensaje: "Entidades recibidas correctamente", request, true);
+            return Ok(response);
+        }
+
         [HttpGet("asignaturas/{institucionKey}/{pagina}/{cantidad}")]
         public ActionResult<BaseResponse> GetAll(int institucionKey, uint pagina = 0, uint cantidad = 10)
         {

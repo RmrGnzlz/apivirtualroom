@@ -8,11 +8,19 @@ namespace Application.HttpModel
     {
         public string Institucion { get; set; }
         public string Nombre { get; set; }
-        public string Grado { get; set;  }
-        public string Grupo { get; set; }
+        public List<string> Grados { get; set;  }
         public override AsignaturaModel ToEntity()
         {
-            throw new System.NotImplementedException();
+            return new AsignaturaModel(
+                new Domain.Entities.Asignatura {
+                    Nombre = Nombre
+                }
+            );
         }
+    }
+    public class RegistroAsignaturasRequest : BaseRequest
+    {
+        public string NIT { get; set; }
+        public List<AsignaturaRequest> Asignaturas { get; set; }
     }
 }

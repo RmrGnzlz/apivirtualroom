@@ -25,10 +25,12 @@ namespace WebApi.Controllers
             _service = new EstudianteService(_unitOfWork);
         }
 
-        [HttpPost, AllowAnonymous]
-        public ActionResult<BaseResponse> Post(EstudianteRequest request)
+        [HttpPost]
+        public ActionResult<BaseResponse> Post(RegistroEstudiantesRequest request)
         {
-            return Ok(_service.Post(request));
+            BaseResponse response = new Response<RegistroEstudiantesRequest>(mensaje: "Entidades recibidas correctamente", request, true);
+            
+            return Ok(response);
         }
 
         [HttpGet("buscar/{busqueda}")]

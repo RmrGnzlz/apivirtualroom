@@ -16,9 +16,9 @@ namespace Application.Services
             usuarioService = new UsuarioService(_unitOfWork);
         }
 
-        public BaseResponse Post(EstudianteRequest request)
+        public BaseResponse Post(EstudianteRequest request, string NIT)
         {
-            Sede sede = _unitOfWork.SedeRepository.FindFirstOrDefault(x => x.Nombre == request.Sede && x.Institucion.NIT == request.InstitucionNIT);
+            Sede sede = _unitOfWork.SedeRepository.FindFirstOrDefault(x => x.Nombre == request.Sede && x.Institucion.NIT == NIT);
             if (sede == null)
             {
                 return new VoidResponse($"La sede {request.Sede} no fue encontrada", false);
@@ -52,7 +52,7 @@ namespace Application.Services
                 return new VoidResponse($"El estudiante no fue persistido en la base de datos, intente nuevamente", false);
             }
 
-            return new Response<EstudianteModel>($"Estudiante {request.Identificacion} registrado correctamente en el grupo {request.Grupo}", new EstudianteModel(estudiante), true);
+            return new Response<EstudianteModel>($"Estudiante {request.NumeroDocumento} registrado correctamente en el grupo {request.Grupo}", new EstudianteModel(estudiante), true);
         }
 
         public BaseResponse Get(string busqueda)
