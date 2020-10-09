@@ -29,6 +29,11 @@ namespace Application.Services
         }
         public BaseResponse AddRange(List<DirectivoRequest> request, string NIT)
         {
+            /** 
+                * Problemas con directivos:
+                    Persona - no institucion
+                    Directivo - no sede
+            */
             Institucion institucion = _unitOfWork.InstitucionRepository.FindFirstOrDefault(x => x.NIT == NIT);
             if (institucion == null)
             {

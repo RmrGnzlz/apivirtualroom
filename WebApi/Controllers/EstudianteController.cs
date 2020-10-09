@@ -29,7 +29,6 @@ namespace WebApi.Controllers
         public ActionResult<BaseResponse> Post(RegistroEstudiantesRequest request)
         {
             BaseResponse response = new Response<RegistroEstudiantesRequest>(mensaje: "Entidades recibidas correctamente", request, true);
-            
             return Ok(response);
         }
 
