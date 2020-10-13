@@ -1,10 +1,10 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Infrastructure.Migrations
 {
-    public partial class MySql : Migration
+    public partial class Inicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,7 +13,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Codigo = table.Column<string>(nullable: true),
                     Nombre = table.Column<string>(nullable: true)
                 },
@@ -27,7 +27,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     TipoDocumento = table.Column<string>(nullable: false),
                     NumeroDocumento = table.Column<string>(maxLength: 15, nullable: false)
                 },
@@ -41,7 +41,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Nombre = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -54,7 +54,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Nombre = table.Column<string>(maxLength: 40, nullable: false),
                     Estado = table.Column<bool>(nullable: false)
                 },
@@ -68,7 +68,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     DepartamentoId = table.Column<int>(nullable: true),
                     Codigo = table.Column<string>(nullable: true),
                     Nombre = table.Column<string>(nullable: true)
@@ -85,141 +85,15 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ActividadMultimedias",
-                columns: table => new
-                {
-                    ActividadId = table.Column<int>(nullable: false),
-                    MultimediaId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ActividadMultimedias", x => new { x.ActividadId, x.MultimediaId });
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Multimedias",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Uuid = table.Column<string>(nullable: true),
-                    Extension = table.Column<string>(nullable: true),
-                    Tipo = table.Column<int>(nullable: false),
-                    ActividadId = table.Column<int>(nullable: true),
-                    ClaseId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Multimedias", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Clases",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Nombre = table.Column<string>(nullable: true),
-                    Descripcion = table.Column<string>(nullable: true),
-                    HorarioId = table.Column<int>(nullable: true),
-                    AsignaturaId = table.Column<int>(nullable: true),
-                    FechaInicio = table.Column<DateTime>(nullable: false),
-                    FechaCierre = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Clases", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Actividades",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ClaseId = table.Column<int>(nullable: true),
-                    FechaSubida = table.Column<DateTime>(nullable: false),
-                    FechaEntrega = table.Column<DateTime>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Actividades", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Actividades_Clases_ClaseId",
-                        column: x => x.ClaseId,
-                        principalTable: "Clases",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "GradoAsignaturas",
-                columns: table => new
-                {
-                    GradoId = table.Column<int>(nullable: false),
-                    AsignaturaId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GradoAsignaturas", x => new { x.AsignaturaId, x.GradoId });
-                    table.ForeignKey(
-                        name: "FK_GradoAsignaturas_Grados_GradoId",
-                        column: x => x.GradoId,
-                        principalTable: "Grados",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "GrupoAsignaturas",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    AsignaturaId = table.Column<int>(nullable: true),
-                    GrupoId = table.Column<int>(nullable: true),
-                    DocenteId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GrupoAsignaturas", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "GrupoAsignaturaClases",
-                columns: table => new
-                {
-                    GrupoAsignaturaId = table.Column<int>(nullable: false),
-                    ClaseId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GrupoAsignaturaClases", x => new { x.ClaseId, x.GrupoAsignaturaId });
-                    table.ForeignKey(
-                        name: "FK_GrupoAsignaturaClases_Clases_ClaseId",
-                        column: x => x.ClaseId,
-                        principalTable: "Clases",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_GrupoAsignaturaClases_GrupoAsignaturas_GrupoAsignaturaId",
-                        column: x => x.GrupoAsignaturaId,
-                        principalTable: "GrupoAsignaturas",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Instituciones",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     MunicipioId = table.Column<int>(nullable: true),
                     NIT = table.Column<string>(nullable: true),
                     DANE = table.Column<string>(nullable: true),
                     Nombre = table.Column<string>(nullable: true),
-                    RectorId = table.Column<int>(nullable: true),
                     PaginaWeb = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -238,7 +112,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     InstitucionId = table.Column<int>(nullable: true),
                     Nombre = table.Column<string>(nullable: true)
                 },
@@ -258,7 +132,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Nombres = table.Column<string>(nullable: false),
                     Apellidos = table.Column<string>(nullable: false),
                     DocumentoId = table.Column<int>(nullable: false),
@@ -286,7 +160,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     InstitucionId = table.Column<int>(nullable: true),
                     Nombre = table.Column<string>(nullable: true),
                     Direccion = table.Column<string>(nullable: true),
@@ -304,23 +178,40 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "GradoAsignaturas",
+                columns: table => new
+                {
+                    GradoId = table.Column<int>(nullable: false),
+                    AsignaturaId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GradoAsignaturas", x => new { x.AsignaturaId, x.GradoId });
+                    table.ForeignKey(
+                        name: "FK_GradoAsignaturas_Asignaturas_AsignaturaId",
+                        column: x => x.AsignaturaId,
+                        principalTable: "Asignaturas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GradoAsignaturas_Grados_GradoId",
+                        column: x => x.GradoId,
+                        principalTable: "Grados",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Docentes",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    PersonaId = table.Column<int>(nullable: false),
-                    MunicipioId = table.Column<int>(nullable: true)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PersonaId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Docentes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Docentes_Municipios_MunicipioId",
-                        column: x => x.MunicipioId,
-                        principalTable: "Municipios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Docentes_Personas_PersonaId",
                         column: x => x.PersonaId,
@@ -334,7 +225,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     RolId = table.Column<int>(nullable: false),
                     PersonaId = table.Column<int>(nullable: false),
                     Username = table.Column<string>(maxLength: 20, nullable: false),
@@ -367,7 +258,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     PersonaId = table.Column<int>(nullable: false),
                     SedeId = table.Column<int>(nullable: true),
                     Cargo = table.Column<string>(nullable: true)
@@ -394,7 +285,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Nombre = table.Column<string>(nullable: true),
                     GradoId = table.Column<int>(nullable: true),
                     SedeId = table.Column<int>(nullable: true)
@@ -469,7 +360,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     PersonaId = table.Column<int>(nullable: false),
                     SedeId = table.Column<int>(nullable: false),
                     GrupoId = table.Column<int>(nullable: false),
@@ -499,28 +390,32 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Horarios",
+                name: "GrupoAsignaturas",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    AsignaturaId = table.Column<int>(nullable: true),
                     GrupoId = table.Column<int>(nullable: true),
-                    DiaDeSemana = table.Column<int>(nullable: false),
-                    HoraInicial = table.Column<uint>(nullable: false),
-                    HoraFinal = table.Column<uint>(nullable: false),
-                    GrupoAsignaturaId = table.Column<int>(nullable: true)
+                    DocenteId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Horarios", x => x.Id);
+                    table.PrimaryKey("PK_GrupoAsignaturas", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Horarios_GrupoAsignaturas_GrupoAsignaturaId",
-                        column: x => x.GrupoAsignaturaId,
-                        principalTable: "GrupoAsignaturas",
+                        name: "FK_GrupoAsignaturas_Asignaturas_AsignaturaId",
+                        column: x => x.AsignaturaId,
+                        principalTable: "Asignaturas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Horarios_Grupos_GrupoId",
+                        name: "FK_GrupoAsignaturas_Docentes_DocenteId",
+                        column: x => x.DocenteId,
+                        principalTable: "Docentes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_GrupoAsignaturas_Grupos_GrupoId",
                         column: x => x.GrupoId,
                         principalTable: "Grupos",
                         principalColumn: "Id",
@@ -547,6 +442,163 @@ namespace Infrastructure.Migrations
                         name: "FK_GrupoEstudiantes_Grupos_GrupoId",
                         column: x => x.GrupoId,
                         principalTable: "Grupos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Horarios",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    GrupoId = table.Column<int>(nullable: true),
+                    DiaDeSemana = table.Column<int>(nullable: false),
+                    HoraInicial = table.Column<long>(nullable: false),
+                    HoraFinal = table.Column<long>(nullable: false),
+                    GrupoAsignaturaId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Horarios", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Horarios_GrupoAsignaturas_GrupoAsignaturaId",
+                        column: x => x.GrupoAsignaturaId,
+                        principalTable: "GrupoAsignaturas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Horarios_Grupos_GrupoId",
+                        column: x => x.GrupoId,
+                        principalTable: "Grupos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Clases",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nombre = table.Column<string>(nullable: true),
+                    Descripcion = table.Column<string>(nullable: true),
+                    HorarioId = table.Column<int>(nullable: true),
+                    AsignaturaId = table.Column<int>(nullable: true),
+                    FechaInicio = table.Column<DateTime>(nullable: false),
+                    FechaCierre = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clases", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Clases_Asignaturas_AsignaturaId",
+                        column: x => x.AsignaturaId,
+                        principalTable: "Asignaturas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Clases_Horarios_HorarioId",
+                        column: x => x.HorarioId,
+                        principalTable: "Horarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Actividades",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ClaseId = table.Column<int>(nullable: true),
+                    FechaSubida = table.Column<DateTime>(nullable: false),
+                    FechaEntrega = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Actividades", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Actividades_Clases_ClaseId",
+                        column: x => x.ClaseId,
+                        principalTable: "Clases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GrupoAsignaturaClases",
+                columns: table => new
+                {
+                    GrupoAsignaturaId = table.Column<int>(nullable: false),
+                    ClaseId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GrupoAsignaturaClases", x => new { x.ClaseId, x.GrupoAsignaturaId });
+                    table.ForeignKey(
+                        name: "FK_GrupoAsignaturaClases_Clases_ClaseId",
+                        column: x => x.ClaseId,
+                        principalTable: "Clases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GrupoAsignaturaClases_GrupoAsignaturas_GrupoAsignaturaId",
+                        column: x => x.GrupoAsignaturaId,
+                        principalTable: "GrupoAsignaturas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Multimedias",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Uuid = table.Column<string>(nullable: true),
+                    Extension = table.Column<string>(nullable: true),
+                    Tipo = table.Column<int>(nullable: false),
+                    ActividadId = table.Column<int>(nullable: true),
+                    ClaseId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Multimedias", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Multimedias_Actividades_ActividadId",
+                        column: x => x.ActividadId,
+                        principalTable: "Actividades",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Multimedias_Clases_ClaseId",
+                        column: x => x.ClaseId,
+                        principalTable: "Clases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ActividadMultimedias",
+                columns: table => new
+                {
+                    ActividadId = table.Column<int>(nullable: false),
+                    MultimediaId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ActividadMultimedias", x => new { x.ActividadId, x.MultimediaId });
+                    table.ForeignKey(
+                        name: "FK_ActividadMultimedias_Actividades_ActividadId",
+                        column: x => x.ActividadId,
+                        principalTable: "Actividades",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ActividadMultimedias_Multimedias_MultimediaId",
+                        column: x => x.MultimediaId,
+                        principalTable: "Multimedias",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -585,11 +637,6 @@ namespace Infrastructure.Migrations
                 name: "IX_Directivos_SedeId",
                 table: "Directivos",
                 column: "SedeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Docentes_MunicipioId",
-                table: "Docentes",
-                column: "MunicipioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Docentes_PersonaId",
@@ -672,11 +719,6 @@ namespace Infrastructure.Migrations
                 column: "MunicipioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Instituciones_RectorId",
-                table: "Instituciones",
-                column: "RectorId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Multimedias_ActividadId",
                 table: "Multimedias",
                 column: "ActividadId");
@@ -721,108 +763,15 @@ namespace Infrastructure.Migrations
                 name: "IX_Usuarios_RolId",
                 table: "Usuarios",
                 column: "RolId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_ActividadMultimedias_Actividades_ActividadId",
-                table: "ActividadMultimedias",
-                column: "ActividadId",
-                principalTable: "Actividades",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_ActividadMultimedias_Multimedias_MultimediaId",
-                table: "ActividadMultimedias",
-                column: "MultimediaId",
-                principalTable: "Multimedias",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Multimedias_Clases_ClaseId",
-                table: "Multimedias",
-                column: "ClaseId",
-                principalTable: "Clases",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Multimedias_Actividades_ActividadId",
-                table: "Multimedias",
-                column: "ActividadId",
-                principalTable: "Actividades",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Clases_Asignaturas_AsignaturaId",
-                table: "Clases",
-                column: "AsignaturaId",
-                principalTable: "Asignaturas",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Clases_Horarios_HorarioId",
-                table: "Clases",
-                column: "HorarioId",
-                principalTable: "Horarios",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_GradoAsignaturas_Asignaturas_AsignaturaId",
-                table: "GradoAsignaturas",
-                column: "AsignaturaId",
-                principalTable: "Asignaturas",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_GrupoAsignaturas_Asignaturas_AsignaturaId",
-                table: "GrupoAsignaturas",
-                column: "AsignaturaId",
-                principalTable: "Asignaturas",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_GrupoAsignaturas_Grupos_GrupoId",
-                table: "GrupoAsignaturas",
-                column: "GrupoId",
-                principalTable: "Grupos",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_GrupoAsignaturas_Docentes_DocenteId",
-                table: "GrupoAsignaturas",
-                column: "DocenteId",
-                principalTable: "Docentes",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Instituciones_Directivos_RectorId",
-                table: "Instituciones",
-                column: "RectorId",
-                principalTable: "Directivos",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Personas_Instituciones_InstitucionId",
-                table: "Personas");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Sedes_Instituciones_InstitucionId",
-                table: "Sedes");
-
             migrationBuilder.DropTable(
                 name: "ActividadMultimedias");
+
+            migrationBuilder.DropTable(
+                name: "Directivos");
 
             migrationBuilder.DropTable(
                 name: "GradoAsignaturas");
@@ -873,7 +822,16 @@ namespace Infrastructure.Migrations
                 name: "Grupos");
 
             migrationBuilder.DropTable(
+                name: "Personas");
+
+            migrationBuilder.DropTable(
                 name: "Grados");
+
+            migrationBuilder.DropTable(
+                name: "Sedes");
+
+            migrationBuilder.DropTable(
+                name: "Documentos");
 
             migrationBuilder.DropTable(
                 name: "Instituciones");
@@ -882,19 +840,7 @@ namespace Infrastructure.Migrations
                 name: "Municipios");
 
             migrationBuilder.DropTable(
-                name: "Directivos");
-
-            migrationBuilder.DropTable(
                 name: "Departamentos");
-
-            migrationBuilder.DropTable(
-                name: "Personas");
-
-            migrationBuilder.DropTable(
-                name: "Sedes");
-
-            migrationBuilder.DropTable(
-                name: "Documentos");
         }
     }
 }

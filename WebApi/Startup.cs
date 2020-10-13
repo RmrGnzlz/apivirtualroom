@@ -44,6 +44,10 @@ namespace WebApi
 
             services.AddDbContext<SolumaticaContext>(opt => opt.UseNpgsql(HerokuStringPostgres(Environment.GetEnvironmentVariable("DATABASE_URL"))));
             // services.AddDbContext<SolumaticaContext>(opt => opt.UseMySql(Configuration.GetConnectionString("MySql")));
+
+            /* Prueba local Postgres */
+            // services.AddDbContext<SolumaticaContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("PostgreSql")));
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IDbContext, SolumaticaContext>();
             services.AddSingleton<IEmailService>(new GmailService(Configuration.GetSection("EMAIL").Value, Configuration.GetSection("PASSWORD_EMAIL").Value));
@@ -95,12 +99,12 @@ namespace WebApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(options => options
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
+            app.UseCors(options =>
+            {
+                options.AllowAnyOrigin()
                 .AllowAnyMethod()
-                .AllowAnyMethod()
-            );
+                .AllowAnyHeader();
+            });
 
             app.UseHttpsRedirection();
 

@@ -11,7 +11,6 @@ namespace Domain.Entities
         public string NIT { get; set; }
         public string DANE { get; set; }
         public string Nombre { get; set; }
-        public Directivo Rector { get; set; }
         public string PaginaWeb { get; set; }
     }
 }

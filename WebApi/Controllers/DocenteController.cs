@@ -30,6 +30,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult<BaseResponse> Post(RegistroDocentesRequest request)
         {
             var response = _service.PostRange(request.Docentes, request.NIT);

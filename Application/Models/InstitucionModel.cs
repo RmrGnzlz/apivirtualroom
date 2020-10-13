@@ -14,7 +14,6 @@ namespace Application.Models
         public string Dane { get; set; }
         public string Nombre { get; set; }
         public string PaginaWeb { get; set; }
-        public DirectivoModel Directivo { get; set; }
         public InstitucionModel() { }
         public InstitucionModel(Institucion entity) : base(entity.Id)
         {
@@ -32,7 +31,6 @@ namespace Application.Models
                 DANE = Dane,
                 Nombre = Nombre,
                 PaginaWeb = PaginaWeb,
-                Rector = Directivo != null ? Directivo.ReverseMap() : null,
             };
         }
         public InstitucionModel Include(List<Sede> sedes)
@@ -50,14 +48,6 @@ namespace Application.Models
             if (municipio != null)
             {
                 Municipio = new MunicipioModel(municipio);
-            }
-            return this;
-        }
-        public InstitucionModel Include(Directivo directivo)
-        {
-            if (directivo != null)
-            {
-                Directivo = new DirectivoModel(directivo);
             }
             return this;
         }

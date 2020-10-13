@@ -32,7 +32,8 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
-        [HttpPost, Authorize]
+        [HttpPost]
+        [AllowAnonymous]
         public ActionResult<InstitucionResponse> Post(InstitucionRequest request)
         {
             var response = _service.Add(request);

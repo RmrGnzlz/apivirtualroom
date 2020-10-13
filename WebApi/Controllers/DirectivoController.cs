@@ -26,6 +26,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult<DirectivoResponse> Post(RegistrarDirectivosRequest request)
         {
             var response = _service.AddRange(request.Directivos, request.NIT);

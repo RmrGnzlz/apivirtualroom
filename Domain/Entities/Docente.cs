@@ -9,7 +9,6 @@ namespace Domain.Entities
         [Required] public Persona Persona { get; set; }
         public List<SedeDocente> SedeDocentes { get; set; }
         public List<GradoDocente> GradoDocentes { get; set; }
-        public Municipio Municipio { get; set; }
         public List<GrupoAsignatura> GrupoAsignaturas { get; set; }
 
         public List<Grado> GetGrados()

@@ -25,6 +25,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult<BaseResponse> Post(RegistroAsignaturasRequest request)
         {
             BaseResponse response = new Response<RegistroAsignaturasRequest>(mensaje: "Entidades recibidas correctamente", request, true);

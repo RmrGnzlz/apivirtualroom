@@ -8,7 +8,6 @@ namespace Application.Models
     public class DocenteModel : Model<Docente>
     {
         public PersonaModel DatosPersonales { get; set; }
-        public MunicipioModel Municipio { get; set; }
         public List<SedeModel> Sedes { get; set; }
         public List<GradoModel> Grados { get; set; }
         public List<GrupoAsignaturaModel> GrupoAsignaturas { get; set; }
@@ -26,7 +25,6 @@ namespace Application.Models
             {
                 Id = BaseModel.GetId(Key),
                 Persona = DatosPersonales != null ? DatosPersonales.ReverseMap() : null,
-                Municipio = Municipio != null ? Municipio.ReverseMap() : null,
             };
             if (Sedes != null)
             {
@@ -34,14 +32,6 @@ namespace Application.Models
                 Sedes.ForEach(x => docente.SedeDocentes.Add(new SedeDocente { Docente = docente, Sede = x.ReverseMap() }));
             }
             return docente;
-        }
-        public DocenteModel Include(Municipio municipio)
-        {
-            if (municipio != null)
-            {
-                Municipio = new MunicipioModel(municipio);
-            }
-            return this;
         }
         public DocenteModel Include(List<Sede> sedes)
         {
