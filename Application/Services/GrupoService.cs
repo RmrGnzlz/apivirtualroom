@@ -33,8 +33,6 @@ namespace Application.Services
 
         public BaseResponse Add(GrupoRequest request, string NIT)
         {
-            request.Grado = request.Grado.Trim().ToUpper();
-            request.Grupo = request.Grupo.Trim().ToUpper();
             request.CedulaDocente = request.CedulaDocente.Trim().ToUpper();
             Docente docente = _unitOfWork.DocenteRepository.FindFirstOrDefault(x => x.Persona.Documento.NumeroDocumento == request.CedulaDocente && x.Persona.Institucion.NIT == NIT);
             if (docente == null)
