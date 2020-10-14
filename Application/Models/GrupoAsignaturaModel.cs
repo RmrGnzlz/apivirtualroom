@@ -78,5 +78,14 @@ namespace Application.Models
             }
             return this;
         }
+
+        public static List<GrupoAsignaturaModel> ListToModels(List<GrupoAsignatura> grupoAsignaturas)
+        {
+            List<GrupoAsignaturaModel> grupoAsignaturaModels = new List<GrupoAsignaturaModel>(grupoAsignaturas.Count);
+            grupoAsignaturas.ForEach(x => {
+                grupoAsignaturaModels.Add(new GrupoAsignaturaModel(x).Include(x.Asignatura).Include(x.Grupo));
+            });
+            return grupoAsignaturaModels;
+        }
     }
 }

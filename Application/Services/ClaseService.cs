@@ -88,8 +88,9 @@ namespace Application.Services
         }
         public BaseResponse ClasesPorAsignatura(int asignaturaKey)
         {
-            var entities = _repository.FindBy(x => x.Asignatura.Id == asignaturaKey, includeProperties: "Clase,GrupoAsignatura").ToList();
-            return new Response<ClaseModel>($"Clases de la asignatura {asignaturaKey}", ClaseModel.ListToModels(entities), true);
+            var entities = _repository.FindBy(x => x.Asignatura.Id == asignaturaKey, includeProperties: "Asignatura,GrupoAsignaturaClases").ToList();
+            var asignatura = _unitOfWork.AsignaturaRepository.FindFirstOrDefault(x => x.Id == asignaturaKey);
+            return new Response<ClaseModel>($"Clases de la asignatura {asignaturaKey}: {asignatura.Nombre}", ClaseModel.ListToModels(entities), true);
         }
     }
 }

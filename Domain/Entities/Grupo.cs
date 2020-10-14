@@ -20,6 +20,18 @@ namespace Domain.Entities
                 Estudiantes.Add(estudiante);
             }
         }
+        public List<GrupoAsignatura> AddAsignaturas(List<Asignatura> asignaturas, Docente docente)
+        {
+            if (GrupoAsignaturas == null)
+            {
+                GrupoAsignaturas = new List<GrupoAsignatura>();
+            }
+            asignaturas.ForEach(x =>
+            {
+                GrupoAsignaturas.Add(new GrupoAsignatura { Asignatura = x, Docente = docente });
+            });
+            return GrupoAsignaturas;
+        }
         public List<Asignatura> Asignaturas()
         {
             if (GrupoAsignaturas == null) return null;

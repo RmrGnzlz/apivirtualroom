@@ -86,6 +86,7 @@ namespace Application.Services
         public DocenteModel GetById(int key)
         {
             Docente docente = _repository.FindBy(x => x.Id == BaseModel.GetId(key), includeProperties: "Persona,Persona.Documento").FirstOrDefault();
+            if (docente == null) return null;
             return new DocenteModel(docente);
         }
     }

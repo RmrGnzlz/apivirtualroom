@@ -88,5 +88,10 @@ namespace Infrastructure.Base
 
             return query.Count();
         }
+
+        public void Detach(T entity)
+        {
+            _db.Entry(entity).State = EntityState.Detached;
+        }
     }
 }

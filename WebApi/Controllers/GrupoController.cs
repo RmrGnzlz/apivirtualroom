@@ -29,7 +29,8 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public ActionResult<BaseResponse> Post(RegistroGruposRequest request)
         {
-            BaseResponse response = new Response<RegistroGruposRequest>(mensaje: "Entidades recibidas correctamente", request, true);
+            BaseResponse response = _service.AddRange(request.Grupos, request.NIT.Trim());
+            if (response.Estado == false) return BadRequest(response);
             return Ok(response);
         }
     }

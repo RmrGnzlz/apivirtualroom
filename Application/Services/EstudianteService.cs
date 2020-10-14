@@ -16,43 +16,58 @@ namespace Application.Services
             usuarioService = new UsuarioService(_unitOfWork);
         }
 
-        public BaseResponse Post(EstudianteRequest request, string NIT)
+        public BaseResponse AddRange(List<EstudianteRequest> requests, string NIT)
         {
-            Sede sede = _unitOfWork.SedeRepository.FindFirstOrDefault(x => x.Nombre == request.Sede && x.Institucion.NIT == NIT);
+            Institucion institucion = _unitOfWork.InstitucionRepository.FindFirstOrDefault(x => x.NIT == NIT);
+            if (institucion == null) return new VoidResponse($"La institución con NIT: {NIT} no se encontró", false);
+            Sede sede = _unitOfWork.SedeRepository.FindFirstOrDefault(x => x.Institucion.NIT == NIT);
             if (sede == null)
             {
-                return new VoidResponse($"La sede {request.Sede} no fue encontrada", false);
+                sede = new Sede
+                {
+                    Nombre = "Principal",
+                    Direccion = institucion.Nombre,
+                    Institucion = institucion
+                };
+                _unitOfWork.SedeRepository.Add(sede);
             }
 
-            Grupo grupo = _unitOfWork.GrupoRepository.FindBy(x => x.Nombre == request.Grupo && x.Grado.Nombre == request.Grado && x.Sede.Id == sede.Id, trackable: true).FirstOrDefault();
-
-            if (grupo == null)
+            List<Estudiante> entities = new List<Estudiante>(requests.Count);
+            foreach (var request in requests)
             {
-                return new VoidResponse($"El grupo {request.Grado}-{request.Grupo} no existe para la sede {request.Sede}", false);
+                request.Sede = request.Sede.ToUpper();
+                request.Grado = request.Grado.ToUpper();
+                request.Grupo = request.Grupo.ToUpper();
+                Grupo grupo = _unitOfWork.GrupoRepository.FindFirstOrDefault(x => x.Nombre == request.Grupo && x.Grado.Nombre == request.Grado, trackable: true);
+                if (grupo == null)
+                {
+                    return new VoidResponse($"El grupo {request.Grado}-{request.Grupo} no existe para la institucion con NIT {NIT}", false);
+                }
+                if (_repository.Count(x => x.Persona.Documento.NumeroDocumento == request.NumeroDocumento && x.Persona.Institucion.NIT == NIT) > 0)
+                {
+                    return new VoidResponse(
+                        mensaje: $"El estudiante con documento {request.NumeroDocumento} ya existe para la institucion con NIT: {NIT}",
+                        estado: false
+                    );
+                }
+                Estudiante entity = request.ToEntity().ReverseMap();
+                entity.Sede = sede;
+                entity.Persona.Institucion = institucion;
+                entity.Grupo = grupo;
+                entity.Persona.Usuario = new UsuarioService(_unitOfWork).GenerateUser(
+                    username: entity.Persona.Documento.NumeroDocumento,
+                    password: "solumaticasgrm",
+                    email: request.Email,
+                    tipo: TipoUsuario.Estudiante,
+                    rol: _unitOfWork.RolRepository.FindFirstOrDefault(x => x.Nombre == TipoUsuario.Estudiante.ToString())
+                );
+                entities.Add(entity);
             }
 
-            Estudiante estudiante = request.ToEntity().ReverseMap();
-            estudiante.Sede = sede;
-            grupo.AddEstudiante(estudiante);
+            _repository.AddRange(entities);
             _unitOfWork.Commit();
-            var registroUsuario = usuarioService.Add(new UsuarioModel
-            {
-                Username = estudiante.Persona.Documento.NumeroDocumento,
-                Password = estudiante.Persona.Documento.NumeroDocumento,
-                Tipo = TipoUsuarioModel.Estudiante,
-            }.Include(estudiante.Persona));
 
-            if (registroUsuario.Estado == false)
-            {
-                return registroUsuario;
-            }
-
-            if (_repository.Count(x => x.Id == estudiante.Id) == 0)
-            {
-                return new VoidResponse($"El estudiante no fue persistido en la base de datos, intente nuevamente", false);
-            }
-
-            return new Response<EstudianteModel>($"Estudiante {request.NumeroDocumento} registrado correctamente en el grupo {request.Grupo}", new EstudianteModel(estudiante), true);
+            return new Response<EstudianteModel>($"{entities.Count} estudiantes registrados correctamente en la institucion con NIT {NIT}", EstudianteModel.ListToModels(entities), true);
         }
 
         public BaseResponse Get(string busqueda)

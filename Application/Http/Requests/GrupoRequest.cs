@@ -8,8 +8,8 @@ namespace Application.HttpModel
     {
         public string CedulaDocente { get; set; }
         public List<string> Asignaturas { get; set; }
-        public string Grado { get; set; }
-        public string Grupo { get; set; }
+        public List<string> Grados { get; set; }
+        public List<string> Grupos { get; set; }
     }
     public class RegistroGruposRequest : BaseRequest
     {

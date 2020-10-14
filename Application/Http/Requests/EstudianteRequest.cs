@@ -13,6 +13,7 @@ namespace Application.HttpModel
         public string NumeroDocumento { get; set; }
         public string Grado { get; set; }
         public string Grupo { get; set; }
+        public string Email { get; set; }
         public override EstudianteModel ToEntity()
         {
             return new EstudianteModel

@@ -18,10 +18,10 @@ namespace Application.HttpModel
         {
             var institucion = new InstitucionModel
             {
-                Nit = NIT,
-                Dane = DANE,
-                Nombre = Nombre,
-                PaginaWeb = PaginaWeb
+                Nit = NIT.Trim(),
+                Dane = DANE.Trim(),
+                Nombre = Nombre.Trim().ToUpper(),
+                PaginaWeb = PaginaWeb.Trim()
             };
             return institucion;
         }

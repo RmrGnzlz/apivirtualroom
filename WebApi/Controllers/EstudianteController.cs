@@ -29,7 +29,8 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public ActionResult<BaseResponse> Post(RegistroEstudiantesRequest request)
         {
-            BaseResponse response = new Response<RegistroEstudiantesRequest>(mensaje: "Entidades recibidas correctamente", request, true);
+            BaseResponse response = _service.AddRange(request.Estudiantes, request.NIT.Trim());
+            if (response.Estado == false) return BadRequest(response);
             return Ok(response);
         }
 

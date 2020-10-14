@@ -33,7 +33,7 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public ActionResult<BaseResponse> Post(RegistroDocentesRequest request)
         {
-            var response = _service.PostRange(request.Docentes, request.NIT);
+            var response = _service.PostRange(request.Docentes, request.NIT.Trim());
             if (response.Estado == false)
             {
                 return BadRequest(response);

@@ -11,14 +11,65 @@ namespace Application.Services
 {
     public class AsignaturaService : Service<Asignatura>
     {
+        private GradoService _gradoService;
         public AsignaturaService(IUnitOfWork unitOfWork) : base(unitOfWork, unitOfWork.AsignaturaRepository)
         {
+            _gradoService = new GradoService(unitOfWork);
         }
         public BaseResponse Get(int institucion, uint pagina, uint cantidad)
         {
             var asignaturas = base.Get(x => x.Institucion.Id == institucion, include: "", page: pagina, size: cantidad);
             return new Response<AsignaturaModel>("Asignaturas consultadas", AsignaturaModel.ListToModels(asignaturas), true);
         }
+
+        public BaseResponse AddRange(List<AsignaturaRequest> requests, string NIT)
+        {
+            Institucion institucion = _unitOfWork.InstitucionRepository.FindFirstOrDefault(x => x.NIT == NIT);
+            if (institucion == null) return new VoidResponse($"La institución con NIT: {NIT} no se encontró", false);
+
+            List<Asignatura> entities = new List<Asignatura>();
+
+            requests.ForEach(request =>
+            {
+                _gradoService.AddRange(request.Grados);
+            });
+
+            foreach (var request in requests)
+            {
+                request.Nombre = request.Nombre.Trim().ToUpper();
+                if (_repository.Count(x => x.Nombre == request.Nombre && x.Institucion.NIT == NIT) > 0)
+                {
+                    return new VoidResponse(
+                        mensaje: $"La asignatura {request.Nombre} ya existe para la institucion con NIT: {NIT}",
+                        estado: false
+                    );
+                }
+
+                Asignatura asignatura = new Asignatura
+                {
+                    Nombre = request.Nombre,
+                    Institucion = institucion
+                };
+                var grados = new List<Grado>();
+
+                foreach (var y in request.Grados)
+                {
+                    grados.Add(_unitOfWork.GradoRepository.FindFirstOrDefault(x => x.Nombre == y.Trim().ToUpper()));
+                }
+                asignatura.AgregarGrados(grados);
+                entities.Add(asignatura);
+            }
+
+            _repository.AddRange(entities);
+            _unitOfWork.Commit();
+
+            return new Response<AsignaturaModel>(
+                mensaje: $"{entities.Count} asignaturas agregadas a la institución con NIT: {NIT}",
+                data: AsignaturaModel.ListToModels(entities),
+                estado: true
+            );
+        }
+
         public BaseResponse AsignaturasPorEstudiante(string username)
         {
             var estudiante = _unitOfWork.EstudianteRepository.FindBy(x => x.Persona.Usuario.Username == username, includeProperties: "Grupo", trackable: false).FirstOrDefault();
@@ -79,7 +130,7 @@ namespace Application.Services
             var estudiante = _unitOfWork.EstudianteRepository.FindBy(x => x.Persona.Documento.NumeroDocumento == documentoEstudiante, includeProperties: "Grupo").FirstOrDefault();
             if (estudiante == null) return new VoidResponse($"El estudiante con documento: {documentoEstudiante} no existe", false);
 
-            GrupoAsignatura grupoAsignatura = _unitOfWork.GrupoAsignaturaRepository.FindBy(x => x.Grupo.Id == estudiante.Grupo.Id, includeProperties: "Asignatura,Clases,Clases.Horario,Clases.Multimedias").FirstOrDefault();
+            GrupoAsignatura grupoAsignatura = _unitOfWork.GrupoAsignaturaRepository.FindBy(x => x.Grupo.Id == estudiante.Grupo.Id, includeProperties: "Asignatura,Horarios,GrupoAsignaturaClases,GrupoAsignaturaClases.Clase.Horario,GrupoAsignaturaClases.Clase.Multimedias").FirstOrDefault();
             if (grupoAsignatura == null)
             {
                 return new VoidResponse($"El estudiante no tiene esta asignatura asignada", false);

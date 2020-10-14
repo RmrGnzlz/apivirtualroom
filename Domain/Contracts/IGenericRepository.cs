@@ -30,5 +30,6 @@ namespace Domain.Contracts
         );
 
         int Count(Expression<Func<T, bool>> predicate);
+        void Detach(T entity);
     }
 }

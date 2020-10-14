@@ -18,12 +18,12 @@ namespace Application.HttpModel
             {
                 DatosPersonales = new PersonaModel
                 {
-                    Apellidos = Apellidos,
-                    Nombres = Nombres,
+                    Apellidos = Apellidos.Trim().ToUpper(),
+                    Nombres = Nombres.Trim().ToUpper(),
                     Documento = new DocumentoModel
                     {
                         Tipo = "CEDULA",
-                        Numero = NumeroCedula
+                        Numero = NumeroCedula.Trim()
                     }
                 }
             };

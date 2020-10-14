@@ -40,7 +40,6 @@ namespace Application.Services
             //             estado: false
             //         );
             //     }
-
             //     rector = directivoResponse.Data.FirstOrDefault().ReverseMap();
             // }
 

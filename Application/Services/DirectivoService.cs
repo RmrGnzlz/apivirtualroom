@@ -57,10 +57,11 @@ namespace Application.Services
                 entity.Persona.Usuario = new UsuarioService(_unitOfWork).GenerateUser(
                     username: entity.Persona.Documento.NumeroDocumento,
                     password: "solumaticasgrm",
-                    email: directivo.Email,
+                    email: directivo.Email.Trim(),
                     tipo: TipoUsuario.Directivo,
                     rol: _unitOfWork.RolRepository.FindFirstOrDefault(x => x.Nombre == TipoUsuario.Directivo.ToString())
                 );
+                entity.Persona.Institucion = institucion;
                 directivos.Add(entity);
             }
             _repository.AddRange(directivos);

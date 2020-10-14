@@ -21,11 +21,11 @@ namespace Application.HttpModel
                 Cargo = Cargo,
                 DatosPersonales = new PersonaModel
                 {
-                    Apellidos = Apellidos,
-                    Nombres = Nombres,
+                    Apellidos = Apellidos.Trim().ToUpper(),
+                    Nombres = Nombres.Trim().ToUpper(),
                     Documento = new DocumentoModel
                     {
-                        Numero = NumeroCedula,
+                        Numero = NumeroCedula.Trim(),
                         Tipo = "CEDULA"
                     }
                 }

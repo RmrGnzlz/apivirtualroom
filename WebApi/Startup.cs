@@ -42,11 +42,11 @@ namespace WebApi
             //"Host=ec2-52-0-155-79.compute-1.amazonaws.com;Port=5432;Database=darscg1heeg51g;Username=mgkshjrkovllrc;Password=2ee5ea5cf4c5c50565a2f1815cd591f109cce67f15c15c0def594b79d424b501;SSL=true;SslMode=Require"
             // Environment.SetEnvironmentVariable("DATABASE_URL", "postgres://yulyztrgxphqmt:eafe676c27a2e344a5f3d2ef498a22ac4b999e6e0582b5bb22eea3296edc4dcc@ec2-18-214-211-47.compute-1.amazonaws.com:5432/dc6hphq4tm6dr5");
 
-            services.AddDbContext<SolumaticaContext>(opt => opt.UseNpgsql(HerokuStringPostgres(Environment.GetEnvironmentVariable("DATABASE_URL"))));
+            // services.AddDbContext<SolumaticaContext>(opt => opt.UseNpgsql(HerokuStringPostgres(Environment.GetEnvironmentVariable("DATABASE_URL"))));
             // services.AddDbContext<SolumaticaContext>(opt => opt.UseMySql(Configuration.GetConnectionString("MySql")));
 
             /* Prueba local Postgres */
-            // services.AddDbContext<SolumaticaContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("PostgreSql")));
+            services.AddDbContext<SolumaticaContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("PostgreSql")));
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IDbContext, SolumaticaContext>();
@@ -99,12 +99,11 @@ namespace WebApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(options =>
-            {
-                options.AllowAnyOrigin()
+            app.UseCors(options => options
+                .AllowAnyOrigin()
                 .AllowAnyMethod()
-                .AllowAnyHeader();
-            });
+                .AllowAnyHeader()
+            );
 
             app.UseHttpsRedirection();
 

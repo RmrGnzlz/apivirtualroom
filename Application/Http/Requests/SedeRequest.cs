@@ -17,8 +17,8 @@ namespace Application.HttpModel
         {
             return new SedeModel
             {
-                Nombre = Nombre,
-                Direccion = Direcion,
+                Nombre = Nombre.Trim().ToUpper(),
+                Direccion = Direcion.Trim().ToUpper(),
                 Telefono = Telefono
             };
         }
