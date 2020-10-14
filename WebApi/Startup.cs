@@ -46,7 +46,7 @@ namespace WebApi
             // services.AddDbContext<SolumaticaContext>(opt => opt.UseMySql(Configuration.GetConnectionString("MySql")));
 
             /* Prueba local Postgres */
-            services.AddDbContext<SolumaticaContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("PostgreSql")));
+            services.AddDbContext<SolumaticaContext>(opt => opt.UseMySql(Configuration.GetConnectionString("MySql")));
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IDbContext, SolumaticaContext>();
