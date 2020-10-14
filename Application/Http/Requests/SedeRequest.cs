@@ -10,7 +10,7 @@ namespace Application.HttpModel
     {
         public string NIT { get; set; }
         public string Nombre { get; set; }
-        public string Direcion { get; set; }
+        public string Direccion { get; set; }
         public string Telefono { get; set; }
         public List<DirectivoRequest> Directivos { get; set; }
         public override SedeModel ToEntity()
@@ -18,7 +18,7 @@ namespace Application.HttpModel
             return new SedeModel
             {
                 Nombre = Nombre.Trim().ToUpper(),
-                Direccion = Direcion.Trim().ToUpper(),
+                Direccion = (Direccion == null ? string.Empty: Direccion).Trim().ToUpper(),
                 Telefono = Telefono
             };
         }

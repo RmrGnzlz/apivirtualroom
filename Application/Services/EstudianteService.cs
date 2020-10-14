@@ -35,9 +35,11 @@ namespace Application.Services
             List<Estudiante> entities = new List<Estudiante>(requests.Count);
             foreach (var request in requests)
             {
-                request.Sede = request.Sede.ToUpper();
-                request.Grado = request.Grado.ToUpper();
-                request.Grupo = request.Grupo.ToUpper();
+                request.Sede = request.Sede.Trim().ToUpper();
+                sede = _unitOfWork.SedeRepository.FindFirstOrDefault(x => request.Sede.Contains(x.Nombre));
+                if (sede == null) sede = _unitOfWork.SedeRepository.FindFirstOrDefault(x => x.Institucion.NIT == NIT);
+                request.Grado = request.Grado.Trim().ToUpper();
+                request.Grupo = request.Grupo.Trim().ToUpper();
                 Grupo grupo = _unitOfWork.GrupoRepository.FindFirstOrDefault(x => x.Nombre == request.Grupo && x.Grado.Nombre == request.Grado, trackable: true);
                 if (grupo == null)
                 {
@@ -61,11 +63,11 @@ namespace Application.Services
                     tipo: TipoUsuario.Estudiante,
                     rol: _unitOfWork.RolRepository.FindFirstOrDefault(x => x.Nombre == TipoUsuario.Estudiante.ToString())
                 );
+                _repository.Add(entity);
+                _unitOfWork.Commit();
+                _repository.Detach(entity);
                 entities.Add(entity);
             }
-
-            _repository.AddRange(entities);
-            _unitOfWork.Commit();
 
             return new Response<EstudianteModel>($"{entities.Count} estudiantes registrados correctamente en la institucion con NIT {NIT}", EstudianteModel.ListToModels(entities), true);
         }

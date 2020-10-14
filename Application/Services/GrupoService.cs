@@ -47,6 +47,9 @@ namespace Application.Services
             request.Asignaturas = list;
             List<Asignatura> asignaturas = _unitOfWork.AsignaturaRepository.FindBy(x => request.Asignaturas.Contains(x.Nombre) && x.Institucion.NIT == NIT, true).ToList();
 
+            request.Grados = request.Grados.ConvertAll(x => x.Trim().ToUpper());
+            request.Grupos = request.Grupos.ConvertAll(x => x.Trim().ToUpper());
+
             foreach (var nombreGrado in request.Grados)
             {
                 if (request.Asignaturas.Contains("TODAS"))

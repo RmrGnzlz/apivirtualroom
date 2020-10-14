@@ -37,19 +37,20 @@ namespace Application.Services
             foreach (var request in requests)
             {
                 request.Nombre = request.Nombre.Trim().ToUpper();
-                if (_repository.Count(x => x.Nombre == request.Nombre && x.Institucion.NIT == NIT) > 0)
+                Asignatura asignatura = entities.FirstOrDefault(x => x.Nombre == request.Nombre);
+                if (asignatura == null)
                 {
-                    return new VoidResponse(
-                        mensaje: $"La asignatura {request.Nombre} ya existe para la institucion con NIT: {NIT}",
-                        estado: false
-                    );
+                    asignatura = _repository.FindFirstOrDefault(x => x.Nombre == request.Nombre && x.Institucion.NIT == NIT);
+                    if (asignatura == null)
+                    {
+                        asignatura = new Asignatura
+                        {
+                            Nombre = request.Nombre,
+                            Institucion = institucion
+                        };
+                        entities.Add(asignatura);
+                    }
                 }
-
-                Asignatura asignatura = new Asignatura
-                {
-                    Nombre = request.Nombre,
-                    Institucion = institucion
-                };
                 var grados = new List<Grado>();
 
                 foreach (var y in request.Grados)
@@ -59,7 +60,6 @@ namespace Application.Services
                 asignatura.AgregarGrados(grados);
                 entities.Add(asignatura);
             }
-
             _repository.AddRange(entities);
             _unitOfWork.Commit();
 
