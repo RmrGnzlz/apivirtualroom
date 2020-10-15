@@ -19,15 +19,16 @@ namespace Application.Services
         public BaseResponse Post(ClaseRequest request, string documentoDocente)
         {
             // Condición con la que buscaremos los grupos-asignatura
-            Expression<Func<GrupoAsignatura, bool>> condicion = x => x.Asignatura.Id == request.AsignaturaKey && x.Grupo.Grado.Nombre == request.Grado && x.Docente.Persona.Documento.NumeroDocumento == documentoDocente && x.Grupo.Sede.Institucion.NIT == request.InstitucionNIT;
+            Expression<Func<GrupoAsignatura, bool>> condicion = x => x.Asignatura.Id == request.AsignaturaKey && x.Grupo.Grado.Nombre == request.Grado && x.Docente.Persona.Documento.NumeroDocumento == documentoDocente && x.Asignatura.Institucion.NIT == request.InstitucionNIT;
             List<GrupoAsignatura> grupos = _unitOfWork.GrupoAsignaturaRepository.FindBy(condicion, true).ToList();
 
             if (!grupos.Any())
             {
-                return new VoidResponse("No se encontraron grupos relacionados", false);
+                return new VoidResponse($"No se encontraron grupos relacionados a la asignatura: {request.AsignaturaKey} del grado: {request.Grado}, para el docente: {documentoDocente} en la institución {request.InstitucionNIT}", false);
             }
 
             Clase clase = request.ToEntity().ReverseMap();
+            clase.Asignatura = _unitOfWork.AsignaturaRepository.FindFirstOrDefault(x => x.Id == request.AsignaturaKey);
             request.Multimedias.ForEach(x =>
             {
                 clase.AddMultimedia(x.ToEntity().ReverseMap());
