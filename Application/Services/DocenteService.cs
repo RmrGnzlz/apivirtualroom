@@ -42,7 +42,8 @@ namespace Application.Services
         }
         public BaseResponse GetAll(int institucionKey)
         {
-            return new Response<DocenteModel>("Lista de docentes", DocenteModel.ListToModels(_repository.FindBy(x => x.Persona.Institucion.Id == BaseModel.GetId(institucionKey), includeProperties: "Persona", trackable: false).ToList()), true);
+            List<Docente> docentes = _repository.FindBy(x => x.Persona.Institucion.Id == BaseModel.GetId(institucionKey), includeProperties: "Persona", trackable: false).ToList();
+            return new Response<DocenteModel>($"Lista de docentes ({docentes.Count})", DocenteModel.ListToModels(docentes), true);
         }
         public BaseResponse PostRange(List<DocenteRequest> request, string NIT)
         {
