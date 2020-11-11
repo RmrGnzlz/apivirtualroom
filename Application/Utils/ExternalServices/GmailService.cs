@@ -7,7 +7,7 @@ namespace Utils.ExternalServices
         public string Email { get; set; }
         public string Password { get; set; }
         public string Host { get; set; } = "smtp.gmail.com";
-        public int Port { get; set; } = 587;
+        public int Port { get; set; } = 25;
         public GmailService(string email, string password)
         {
             Email = email;
